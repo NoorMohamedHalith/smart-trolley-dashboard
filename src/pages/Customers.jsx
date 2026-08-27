@@ -4,7 +4,7 @@ import { TransactionModal } from '../components/common/TransactionModal';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { EmptyState } from '../components/common/EmptyState';
 import { formatCurrency, formatDate } from '../utils/formatters';
-import { User, ShoppingBag, DollarSign, Calendar, ChevronRight, Award, Search } from 'lucide-react';
+import { User, ShoppingBag, IndianRupee, Calendar, ChevronRight, Award, Search } from 'lucide-react';
 
 export const CustomersPage = () => {
   const { customerMetrics, loading } = useDatabase();
@@ -47,7 +47,7 @@ export const CustomersPage = () => {
             </h3>
           </div>
           <div className="p-3 bg-emerald-500/20 text-emerald-400 rounded-xl border border-emerald-500/30">
-            <DollarSign className="w-6 h-6" />
+            <IndianRupee className="w-6 h-6" />
           </div>
         </div>
 

@@ -3,7 +3,7 @@ import { useDatabase } from '../context/DatabaseContext';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { StatCard } from '../components/common/StatCard';
 import { formatCurrency } from '../utils/formatters';
-import { BarChart3, TrendingUp, Users, DollarSign, Receipt, CreditCard } from 'lucide-react';
+import { BarChart3, TrendingUp, Users, IndianRupee, Receipt, CreditCard } from 'lucide-react';
 import { AreaChart, Area, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 export const AnalyticsPage = () => {
@@ -55,7 +55,7 @@ export const AnalyticsPage = () => {
           title="Gross Revenue"
           value={formatCurrency(totalSales)}
           subtext="Total processed cart sales"
-          icon={DollarSign}
+          icon={IndianRupee}
           color="emerald"
         />
         <StatCard

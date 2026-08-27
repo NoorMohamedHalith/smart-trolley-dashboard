@@ -5,7 +5,7 @@ import { TransactionModal } from '../components/common/TransactionModal';
 import { EmptyState } from '../components/common/EmptyState';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { formatCurrency, formatDate } from '../utils/formatters';
-import { DollarSign, Users, ShoppingBag, Receipt, Cpu, AlertTriangle, ArrowRight, Eye } from 'lucide-react';
+import { IndianRupee, Users, ShoppingBag, Receipt, Cpu, AlertTriangle, ArrowRight, Eye } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 export const OverviewPage = ({ onNavigate }) => {
@@ -41,7 +41,7 @@ export const OverviewPage = ({ onNavigate }) => {
           title="Today's Sales"
           value={formatCurrency(todaySales)}
           subtext={`Total revenue: ${formatCurrency(totalSales)}`}
-          icon={DollarSign}
+          icon={IndianRupee}
           color="emerald"
           trend="up"
           trendValue="+14.2%"

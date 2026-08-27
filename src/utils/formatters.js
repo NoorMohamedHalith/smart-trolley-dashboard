@@ -1,34 +1,54 @@
 /**
- * Utility functions for formatting currencies, dates, and aggregating database structures.
+ * Utility functions for formatting currencies (Indian Rupee ₹), dates, and aggregating database structures.
  */
 
-// Format monetary values
+// Format monetary values to Indian Rupee (₹)
 export const formatCurrency = (amount) => {
   const numericAmount = typeof amount === 'number' ? amount : parseFloat(amount) || 0;
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
+  return `₹${numericAmount.toLocaleString('en-IN', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(numericAmount);
+  })}`;
 };
 
-// Format timestamps into readable date & time
+// Format timestamps into readable date & time (Handles Unix timestamps, ISO strings, seconds, milliseconds)
 export const formatDate = (timestamp) => {
-  if (!timestamp) return 'N/A';
+  if (!timestamp) {
+    return new Intl.DateTimeFormat('en-IN', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    }).format(new Date());
+  }
+
   let date;
   if (typeof timestamp === 'number') {
-    date = new Date(timestamp);
+    // If timestamp is in seconds (10 digits), convert to milliseconds
+    const timeMs = timestamp < 10000000000 ? timestamp * 1000 : timestamp;
+    date = new Date(timeMs);
   } else if (typeof timestamp === 'string') {
-    date = new Date(timestamp);
-    if (isNaN(date.getTime())) {
-      date = new Date(parseInt(timestamp) || Date.now());
+    const trimmed = timestamp.trim();
+    const parsedNum = parseFloat(trimmed);
+    if (!isNaN(parsedNum) && /^\d+$/.test(trimmed)) {
+      const timeMs = parsedNum < 10000000000 ? parsedNum * 1000 : parsedNum;
+      date = new Date(timeMs);
+    } else {
+      date = new Date(trimmed);
     }
+  } else if (timestamp instanceof Date) {
+    date = timestamp;
   } else {
     date = new Date();
   }
 
-  return new Intl.DateTimeFormat('en-US', {
+  if (isNaN(date.getTime())) {
+    date = new Date(); // Robust fallback to current date/time if parsing fails
+  }
+
+  return new Intl.DateTimeFormat('en-IN', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -40,12 +60,27 @@ export const formatDate = (timestamp) => {
 
 // Relative time formatter (e.g. "3 mins ago")
 export const formatRelativeTime = (timestamp) => {
-  if (!timestamp) return 'Unknown';
-  let timeMs = typeof timestamp === 'number' ? timestamp : new Date(timestamp).getTime();
-  if (isNaN(timeMs)) return 'Unknown';
+  if (!timestamp) return 'Just now';
+  let timeMs;
+
+  if (typeof timestamp === 'number') {
+    timeMs = timestamp < 10000000000 ? timestamp * 1000 : timestamp;
+  } else if (typeof timestamp === 'string') {
+    const trimmed = timestamp.trim();
+    const parsedNum = parseFloat(trimmed);
+    if (!isNaN(parsedNum) && /^\d+$/.test(trimmed)) {
+      timeMs = parsedNum < 10000000000 ? parsedNum * 1000 : parsedNum;
+    } else {
+      timeMs = new Date(trimmed).getTime();
+    }
+  } else {
+    timeMs = Date.now();
+  }
+
+  if (isNaN(timeMs)) return 'Just now';
 
   const diffSeconds = Math.floor((Date.now() - timeMs) / 1000);
-  if (diffSeconds < 10) return 'Just now';
+  if (diffSeconds < 10 || diffSeconds < 0) return 'Just now';
   if (diffSeconds < 60) return `${diffSeconds}s ago`;
   
   const diffMinutes = Math.floor(diffSeconds / 60);
@@ -118,7 +153,7 @@ export const aggregateCustomerStats = (purchasesList = []) => {
 
     const txTime = new Date(ts).getTime();
     const currLastTime = new Date(map[custId].lastPurchaseTimestamp).getTime();
-    if (txTime > currLastTime) {
+    if (isNaN(currLastTime) || txTime > currLastTime) {
       map[custId].lastPurchaseTimestamp = ts;
     }
   });
@@ -132,18 +167,21 @@ export const generateAnalyticsData = (purchasesList = []) => {
     return { daily: [], weekly: [], monthly: [], customerVolume: [], atvTrend: [] };
   }
 
-  // Sort chronologically
   const sorted = [...purchasesList].sort((a, b) => {
-    return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
+    const timeA = new Date(a.timestamp).getTime() || 0;
+    const timeB = new Date(b.timestamp).getTime() || 0;
+    return timeA - timeB;
   });
 
   const dailyMap = {};
   const monthlyMap = {};
 
   sorted.forEach((tx) => {
-    const dateObj = new Date(tx.timestamp || Date.now());
-    const dayKey = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    const monthKey = dateObj.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+    let dateObj = new Date(tx.timestamp);
+    if (isNaN(dateObj.getTime())) dateObj = new Date();
+
+    const dayKey = dateObj.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
+    const monthKey = dateObj.toLocaleDateString('en-IN', { month: 'short', year: '2-digit' });
     const amount = Number(tx.total || 0);
 
     // Daily

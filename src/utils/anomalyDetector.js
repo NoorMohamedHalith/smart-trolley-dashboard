@@ -32,7 +32,7 @@ export const detectCartAnomalies = (purchasesList = []) => {
         type: 'UNUSUALLY_HIGH_AMOUNT',
         severity: 'HIGH',
         title: 'High Transaction Total',
-        message: `Cart total of $${total.toFixed(2)} exceeds standard threshold ($${ANOMALY_THRESHOLDS.HIGH_TRANSACTION_AMOUNT}).`,
+        message: `Cart total of ₹${total.toFixed(2)} exceeds standard threshold (₹${ANOMALY_THRESHOLDS.HIGH_TRANSACTION_AMOUNT}).`,
         details: { total, threshold: ANOMALY_THRESHOLDS.HIGH_TRANSACTION_AMOUNT },
       });
     }
