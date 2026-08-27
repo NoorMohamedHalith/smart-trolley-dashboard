@@ -4,7 +4,8 @@ import { Header } from './Header';
 import { ConnectionStatus } from '../common/ConnectionStatus';
 
 export const Layout = ({ activeTab, setActiveTab, searchQuery, setSearchQuery, children }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  // Start open by default, can be toggled/closed on all screen sizes
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
@@ -21,11 +22,14 @@ export const Layout = ({ activeTab, setActiveTab, searchQuery, setSearchQuery, c
           setIsOpen={setIsSidebarOpen} 
         />
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col lg:pl-64 min-w-0">
+        {/* Main Content Area (Dynamic padding based on Sidebar open/close state) */}
+        <div className={`flex-1 flex flex-col transition-all duration-300 min-w-0 ${
+          isSidebarOpen ? 'lg:pl-64' : 'lg:pl-0'
+        }`}>
           <Header 
             activeTab={activeTab} 
-            onOpenMobileSidebar={() => setIsSidebarOpen(true)}
+            isSidebarOpen={isSidebarOpen}
+            onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />

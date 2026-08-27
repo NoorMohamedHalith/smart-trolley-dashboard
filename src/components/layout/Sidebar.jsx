@@ -8,7 +8,8 @@ import {
   Cpu, 
   AlertTriangle, 
   Radio, 
-  X
+  X,
+  PanelLeftClose
 } from 'lucide-react';
 import { useDatabase } from '../../context/DatabaseContext';
 
@@ -44,12 +45,12 @@ export const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
 
       {/* Sidebar Drawer */}
       <aside className={`
-        fixed top-0 left-0 bottom-0 z-50 w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between transition-transform duration-300 ease-in-out lg:translate-x-0
+        fixed top-0 left-0 bottom-0 z-50 w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div>
-          {/* Brand Header */}
-          <div className="p-5 border-b border-slate-800 flex items-center justify-between">
+          {/* Brand Header & Close Button */}
+          <div className="p-4 border-b border-slate-800 flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="p-2.5 bg-gradient-to-tr from-indigo-600 to-purple-600 rounded-xl text-white shadow-lg glow-indigo">
                 <Radio className="w-5 h-5 animate-pulse" />
@@ -60,9 +61,11 @@ export const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
               </div>
             </div>
 
+            {/* Close Sidebar Button (Visible on both Desktop & Mobile) */}
             <button 
               onClick={() => setIsOpen(false)}
-              className="lg:hidden p-1 text-slate-400 hover:text-white rounded-lg"
+              className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800/80 rounded-xl border border-slate-800 transition duration-200"
+              title="Close Sidebar Panel"
             >
               <X className="w-5 h-5" />
             </button>
@@ -78,7 +81,6 @@ export const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
                   key={item.id}
                   onClick={() => {
                     setActiveTab(item.id);
-                    setIsOpen(false);
                   }}
                   className={`
                     w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium text-xs sm:text-sm transition-all duration-200

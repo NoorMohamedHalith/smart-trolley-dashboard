@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Search, Clock, Bell, RefreshCw } from 'lucide-react';
+import { Menu, Search, Clock, Bell, PanelLeftOpen, PanelLeftClose } from 'lucide-react';
 import { useDatabase } from '../../context/DatabaseContext';
 
-export const Header = ({ activeTab, onOpenMobileSidebar, searchQuery, setSearchQuery }) => {
+export const Header = ({ activeTab, isSidebarOpen, onToggleSidebar, searchQuery, setSearchQuery }) => {
   const { anomalies, lowStockProducts } = useDatabase();
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -27,13 +27,14 @@ export const Header = ({ activeTab, onOpenMobileSidebar, searchQuery, setSearchQ
     <header className="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 sm:px-6 py-3">
       <div className="flex items-center justify-between gap-4">
         
-        {/* Left Side: Mobile Menu Button & Page Title */}
+        {/* Left Side: Sidebar Toggle Button & Page Title */}
         <div className="flex items-center space-x-3">
           <button
-            onClick={onOpenMobileSidebar}
-            className="lg:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            onClick={onToggleSidebar}
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800 transition duration-200"
+            title={isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}
           >
-            <Menu className="w-5 h-5" />
+            {isSidebarOpen ? <PanelLeftClose className="w-5 h-5" /> : <PanelLeftOpen className="w-5 h-5 text-indigo-400" />}
           </button>
 
           <div>
