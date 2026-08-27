@@ -4,13 +4,11 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node ./node_modules/vite/bin/vite.js",
-    "build": "node ./node_modules/vite/bin/vite.js build",
-    "preview": "node ./node_modules/vite/bin/vite.js preview"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@firebase/app": "^0.10.5",
-    "@firebase/database": "^1.0.5",
     "clsx": "^2.1.1",
     "firebase": "^10.12.2",
     "lucide-react": "^0.395.0",
