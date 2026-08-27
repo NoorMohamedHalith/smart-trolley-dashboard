@@ -1,3 +1,5 @@
+import { ref, onValue } from "firebase/database";
+import { database } from "./firebase";
 import React, { useState } from 'react';
 import { DatabaseProvider } from './context/DatabaseContext';
 import { Layout } from './components/layout/Layout';
@@ -41,8 +43,8 @@ export function App() {
 
   return (
     <DatabaseProvider>
-      <Layout 
-        activeTab={activeTab} 
+      <Layout
+        activeTab={activeTab}
         setActiveTab={setActiveTab}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
